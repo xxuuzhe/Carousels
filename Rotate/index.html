@@ -1,141 +1,158 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
 <head>
-	<meta charset="UTF-8" />
-	<title>Title</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Rotate</title>
 <style>
-*{margin: 0;padding:0;list-style: none}
-#box{width: 800px;height: 360px;position: relative;margin:100px auto;-webkit-perspective:1600px;-webkit-perspective-origin:center;-webkit-transform-style:preserve-3d;}
-#ul{-webkit-transform-style:preserve-3d;}
-#ul1 li{height: 360px;width: 80px;-webkit-transform-style:preserve-3d;-webkit-transform-origin:center center -180px;float: left;position: relative;}
-a{position: absolute;width: 100%;height: 100%;}
-a:nth-child(1){background: url(res/1.jpg) no-repeat;}
-a:nth-child(2){background: url(res/2.jpg) no-repeat;left: 0;top:-360px;-webkit-transform:rotatex(90deg);-webkit-transform-origin:bottom;}
-a:nth-child(3){background: url(res/3.jpg) no-repeat;left: 0;top:0;-webkit-transform:translatez(-360px);-webkit-transform-origin:center;}
-a:nth-child(4){background: url(res/4.jpg) no-repeat;left: 0;top:360px;-webkit-transform:rotatex(-90deg) ;-webkit-transform-origin:top;}
-ol{width: 200px;height: 60px;display: -webkit-box;-webkit-box-pack:center;-webkit-box-align:center;margin:0 auto;}
-ol li{-webkit-box-flex:1;background: pink;text-align: center;margin:4px;height: 60px;line-height: 60px;cursor: pointer }
-li span:nth-of-type(1){position: absolute;width: 360px;height: 360px;background: gray;left: -360px;top:0;-webkit-transform:rotatey(-90deg);-webkit-transform-origin:right;}
-li span:nth-of-type(2){position: absolute;width: 360px;height: 360px;background: gray;left: 80px;top:0;-webkit-transform:rotatey(90deg);-webkit-transform-origin:left;}
-
+ul{margin:0;padding:0;}
+li{ list-style:none;}
+img{border:none;}
+body{ text-align:center;}
+#box{width:800px;height:360px; margin:100px auto 50px; position:relative;}
+#box ul{ position:absolute;left:0;top:0;width:0;height:0;overflow:hidden;}
+#box li{width:800px;height:360px; position:absolute;left:0;top:0;}
+#show{width:800px;height:360px; position:absolute;left:0;top:0; display:block;-webkit-perspective:1000px;}
+#show .div2{-webkit-transform-style:preserve-3d; position:relative; -webkit-transition:0.5s all ease;width:50px;height:360px;float:left;-webkit-backface-visibility: hidden;}
+#show a{width:50px;height:360px; position:absolute;left:0;top:0;}
+#show .img1{background:url(res/1.jpg) no-repeat;}
+#show .img2{background:url(res/2.jpg) no-repeat;-webkit-transform-origin:top;-webkit-transform: translateZ(-360px)  rotateX(90deg); background:url(res/2.jpg) no-repeat;}
+#show span{background:#333;width:360px;height:360px;left:0;top:0; position:absolute; -webkit-transform-origin:left;-webkit-transform: rotateY(90deg);}
+#show .span2{left:50px;}
 </style>
-<script type="text/javascript">
-window.onload=function(){
-	var oUl = document.getElementById('ul');
-	var aLi = oUl.getElementsByTagName('li');
-	var n=0;
-	for(var i=0;i<10;i++){
-		
-		aLi[i].style.zIndex= i<5?5-i:i;
-		for(var j=0;j<4;j++){
-			aLi[i].children[j].style.backgroundPosition=-(i*80)+'px '+'0px';
-		};
+<script>
+window.onload=function()
+{
+	var oBox=document.getElementById("box");
+	var aImg=oBox.getElementsByTagName("ul")[0].getElementsByTagName("img");
+	var aLi=oBox.getElementsByTagName("ul")[0].getElementsByTagName("li");
+	var oShow=document.getElementById("show");
+	var oPrev=document.getElementById("prev");
+	var oNext=document.getElementById("next");
+	var iLength=oShow.offsetWidth/50;
+	oShow.iNow=0;
+	oShow.aUrl=[];
+	oShow.off=false;
+	for(var i=0;i<iLength;i++)
+	{
+		var oDiv=document.createElement("div");
+		oDiv.className="div2";
+		oDiv.style.zIndex=i>iLength/2?iLength-i:i;
+		oDiv.innerHTML="<a href='#' class='img1' style='background-position:-"+i*50+"px 0px'></a><a href='#' class='img2' style='background-position:-"+i*50+"px 0px'></a><span class='span1'></span><span class='span2'></span>";
+		oDiv.time=null;
+		oShow.appendChild(oDiv);
+	}
+	for(var i=0;i<aImg.length;i++)
+	{
+		oShow.aUrl.push(aImg[i].getAttribute('src'));
+	}
+	oNext.onmousedown=function()
+	{
+		if(oShow.off)
+		{
+			return false;
+		}
+		oShow.off=true;
+		var iNext=oShow.iNow+1;
+		if(iNext>=oShow.aUrl.length)
+		{
+			iNext=0;
+		}
+		tab(iNext);
+		setTimeout(
+			function()
+			{
+				oShow.off=false;
+			},iLength*50+50+350
+		)
 	};
-	var oOl = document.getElementsByTagName('ol')[0];
-	var aLi2 = oOl.getElementsByTagName('li');
-	for(var i=0;i<aLi2.length;i++){
-		aLi2[i].onclick=function(){
-			n++;
-			for(var i=0;i<10;i++){
-				aLi[i].style.WebkitTransform='rotatex('+n*90+'deg)';
-				aLi[i].style.WebkitTransition='.5s '+i*50+'ms';
-			};
-		};
+	oPrev.onmousedown=function()
+	{
+		if(oShow.off)
+		{
+			return false;
+		}
+		oShow.off=true;
+		var iNext=oShow.iNow-1;
+		if(iNext<0)
+		{
+			iNext=oShow.aUrl.length-1;
+		}
+		tab(iNext);
+		setTimeout(
+			function()
+			{
+				oShow.off=false;
+			},iLength*50+50+350
+		)
 	};
 };
+function tab(iNext)
+{
+	var oShow=document.getElementById("show");
+	var aImg2=oShow.getElementsByClassName("img2");
+	var aDiv=oShow.getElementsByTagName("div");
+	for(var i=0;i<aImg2.length;i++)
+	{
+		aImg2[i].style.backgroundImage="url("+oShow.aUrl[iNext]+")";
+	}
+	for(var i=0;i<aDiv.length;i++)
+	{
+		var iTime=i*50;
+		starmove(aDiv[i],iTime);
+	}
+	oShow.iNow=iNext;
+}
+function starmove(obj,iTime)
+{
+	var aImg1=obj.getElementsByClassName("img1")[0];
+	var aImg2=obj.getElementsByClassName("img2")[0];
+	var aSpan1=obj.getElementsByClassName("span1")[0];
+	var aSpan2=obj.getElementsByClassName("span2")[0];
+	obj.style.WebkitTransition="0.3s -webkit-transform ease";
+	aSpan1.style.WebkitTransition=aSpan2.style.WebkitTransition=aImg1.style.WebkitTransition=aImg2.style.WebkitTransition="20ms -webkit-transform ease";
+	setTimeout(
+		function()
+		{
+			aImg1.style.WebkitTransform="translateZ(180px)";
+			aImg2.style.WebkitTransform="translateZ(-180px) rotateX(90deg)";
+			aSpan2.style.WebkitTransform=aSpan1.style.WebkitTransform="translateZ(180px) rotateY(90deg)";
+			setTimeout(
+				function()
+				{
+					obj.style.WebkitTransform="translateZ(-180px) rotateX(-90deg)";
+					setTimeout(
+						function()
+						{
+							
+							aSpan1.style.WebkitTransition=aSpan2.style.WebkitTransition=obj.style.WebkitTransition=aImg1.style.WebkitTransition=aImg2.style.WebkitTransition="none";
+							aImg1.style.backgroundImage=aImg2.style.backgroundImage;
+							obj.style.WebkitTransform="rotateX(0deg)";									
+							aSpan1.style.WebkitTransform="rotateY(90deg)";
+							aSpan2.style.WebkitTransform="rotateY(90deg)";
+							aImg1.style.WebkitTransform="translateZ(0px)";
+							aImg2.style.WebkitTransform="translateZ(0px) rotateX(-90deg)";
+						},350
+					);
+				},50);
+		},iTime
+	);
+	
+}
 </script>
 </head>
 <body>
-
-<div id='box'>
-	<ul id='ul'>
-		<li>
-			<a></a>
-			<a></a>
-			<a></a>
-			<a></a>
-			<span></span>
-			<span></span>
-		</li>
-		<li>
-			<a></a>
-			<a></a>
-			<a></a>
-			<a></a>
-			<span></span>
-			<span></span>
-		</li>
-		<li>
-			<a></a>
-			<a></a>
-			<a></a>
-			<a></a>
-			<span></span>
-			<span></span>
-		</li>
-		<li>
-			<a></a>
-			<a></a>
-			<a></a>
-			<a></a>
-			<span></span>
-			<span></span>
-		</li>
-		<li>
-			<a></a>
-			<a></a>
-			<a></a>
-			<a></a>
-			<span></span>
-			<span></span>
-		</li>
-		<li>
-			<a></a>
-			<a></a>
-			<a></a>
-			<a></a>
-			<span></span>
-			<span></span>
-		</li>
-		<li>
-			<a></a>
-			<a></a>
-			<a></a>
-			<a></a>
-			<span></span>
-			<span></span>
-		</li>
-		<li>
-			<a></a>
-			<a></a>
-			<a></a>
-			<a></a>
-			<span></span>
-			<span></span>
-		</li>
-
-		<li>
-			<a></a>
-			<a></a>
-			<a></a>
-			<a></a>
-			<span></span>
-			<span></span>
-		</li>
-		<li>
-			<a></a>
-			<a></a>
-			<a></a>
-			<a></a>
-			<span></span>
-			<span></span>
-		</li>
-	</ul>
+<div id="box">
+    <ul>
+        <li><a href="#"><img src="res/1.jpg" alt=""/></a></li>
+        <li><a href="#"><img src="res/2.jpg" alt=""/></a></li>
+        <li><a href="#"><img src="res/3.jpg" alt=""/></a></li>
+        <li><a href="#"><img src="res/4.jpg" alt=""/></a></li>
+        <li><a href="#"><img src="res/5.jpg" alt=""/></a></li>
+    </ul>
+    <div id="show">
+    </div>
 </div>
-<ol>
-	<li>1</li><li>2</li><li>3</li><li>4</li>
-</ol>
-
-	
+<input type="button" id="prev" value="上一张" />
+<input type="button" id="next" value="下一张" />
 </body>
 </html>
