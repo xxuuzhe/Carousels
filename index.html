@@ -3,67 +3,192 @@
 <meta charset="utf-8">
 <title>Demos</title>
 <style type="text/css">
-*{margin: 0;padding: 0;list-type:none;}
-#demo1 .div1{width:700px;height:400px;margin:150px auto;position: relative;background:url(res/Boom/1.jpg);transform-style:preserve-3d;}
+*{margin: 0;padding: 0;list-style:none;border: none;}
+h1{text-align: center;margin-top: 20px;}
+body{text-align: center;}
+
+#demo1 .div1{width:700px;height:400px;margin:20px auto 0 auto;position: relative;background:url(res/Boom/1.jpg);transform-style:preserve-3d;}
 #demo1 span{position: absolute;width: 100px;height:100px;background:url(res/Boom/0.jpg);transform-style:preserve-3d;}
+
+#demo2{width:800px;height:360px; margin:20px auto 50px; position:relative;}
+#prev,#next{display: inline-block;width: 120px;height: 30px;line-height: 30px;outline: none;-webkit-box-shadow:0 2px 2px #aaa;background: #eee}
+#prev:active,#next:active{position:relative;top:2px;-webkit-box-shadow:none;}
+#demo2 ul{ position:absolute;left:0;top:0;width:0;height:0;overflow:hidden;}
+#demo2 li{width:800px;height:360px; position:absolute;left:0;top:0;}
+#show{width:800px;height:360px; position:absolute;left:0;top:0; display:block;-webkit-perspective:1000px;}
+#show .div2{-webkit-transform-style:preserve-3d; position:relative; -webkit-transition:0.5s all ease;width:50px;height:360px;float:left;-webkit-backface-visibility: hidden;}
+#show a{width:50px;height:360px; position:absolute;left:0;top:0;}
+#show .img1{background:url(res/Rotate/1.jpg) no-repeat;}
+#show .img2{background:url(res/Rotate/2.jpg) no-repeat;-webkit-transform-origin:top;-webkit-transform: translateZ(-360px)  rotateX(90deg); background:url(res/Rotate/2.jpg) no-repeat;}
+#show span{background:#333;width:360px;height:360px;left:0;top:0; position:absolute; -webkit-transform-origin:left;-webkit-transform: rotateY(90deg);}
+#show .span2{left:50px;}
 </style>
 
 </head>
 
 <body>
+<h1>Boom</h1>
 <section id="demo1">
   <div class="div1"></div>
 </section>
+<h2>Rotate</h2>
+<div id="demo2">
+    <ul>
+        <li><a href="javascript:;"><img src="res/Rotate/1.jpg" alt=""/></a></li>
+        <li><a href="javascript:;"><img src="res/Rotate/2.jpg" alt=""/></a></li>
+        <li><a href="javascript:;"><img src="res/Rotate/3.jpg" alt=""/></a></li>
+        <li><a href="javascript:;"><img src="res/Rotate/4.jpg" alt=""/></a></li>
+        <li><a href="javascript:;"><img src="res/Rotate/5.jpg" alt=""/></a></li>
+    </ul>
+    <div id="show">
+    </div>
+</div>
+<input type="button" id="prev" value="Prev" />
+<input type="button" id="next" value="Next" />
 </body>
 <script>
-var oDemo1 = document.getElementById('demo1');
-var oDiv1 = oDemo1.querySelector('.div1');
-var oBody = document.body;
-var now=0;
-var btnReady = true;
-for(var i=0;i<7;i++){
-	for(var j=0;j<4;j++){
-		var span = document.createElement('span');
-		span.style.left=i*100+'px'
-		span.style.top=j*100+'px'
-		span.style.backgroundPosition=-i*100+'px '+(-j*100)+'px'
-		span.style.opacity=1
-		span.style.webkitTransform='perspective(800px) translateX(0) translateY(0) translateZ(0) rotateX(0) rotateY(0) rotateZ(0)'
-		oDiv1.appendChild(span)
+var json = {
+	demo1 : function(){
+		var oDemo1 = document.getElementById('demo1');
+		var oDiv1 = oDemo1.querySelector('.div1');
+		
+		var now=0;
+		var btnReady = true;
+		for(var i=0;i<7;i++){
+			for(var j=0;j<4;j++){
+				var span = document.createElement('span');
+				span.style.left=i*100+'px'
+				span.style.top=j*100+'px'
+				span.style.backgroundPosition=-i*100+'px '+(-j*100)+'px'
+				span.style.opacity=1
+				span.style.webkitTransform='perspective(800px) translateX(0) translateY(0) translateZ(0) rotateX(0) rotateY(0) rotateZ(0)'
+				oDiv1.appendChild(span)
+			}
+		}
+		var aSpan = oDemo1.getElementsByTagName('span')
+		oDemo1.onclick=function(){
+			if(!btnReady)return;
+			btnReady = false;
+			now++
+			for(var i=0;i<aSpan.length;i++){
+				var spanX = aSpan[i].offsetWidth/2+aSpan[i].offsetLeft;
+				var spanY = aSpan[i].offsetHeight/2+aSpan[i].offsetTop;
+				var boxX = oDiv1.offsetWidth/2;
+				var boxY = oDiv1.offsetHeight/2;
+				aSpan[i].style.opacity=0
+				aSpan[i].style.webkitTransition='.5s ease-out all'
+				aSpan[i].style.webkitTransform='perspective(800px) translateX('+(spanX-boxX)+'px) translateY('+(spanY-boxY)+'px) translateZ('+rnd()+'px) rotateX('+font()*rnd()+'deg) rotateY('+font()*rnd()+'deg) rotateZ('+font()*rnd()+'deg)';
+
+				(function(oSpan){
+					oSpan.addEventListener('webkitTransitionEnd',function(){
+						oSpan.style.opacity=1
+						oSpan.style.webkitTransition='0s ease-out all'
+						oDiv1.style.backgroundImage='url(res/Boom/'+((now+1)%3)+'.jpg)'
+						oSpan.style.backgroundImage='url(res/Boom/'+now%3+'.jpg)'
+						oSpan.style.webkitTransform='perspective(800px) translateX(0) translateY(0) translateZ(0) rotateX(0) rotateY(0) rotateZ(0)'
+						btnReady = true;
+					},false)
+				})(aSpan[i])
+			}
+		}
+
+		function rnd(){
+			return parseInt(Math.random()*100)
+		}
+		function font(){
+			return Math.random()>0.5?1:-1;
+		}
+	},
+	demo2 : function(){
+		var oBox=document.getElementById("demo2");
+		var aImg=oBox.getElementsByTagName("ul")[0].getElementsByTagName("img");
+		var aLi=oBox.getElementsByTagName("ul")[0].getElementsByTagName("li");
+		var oShow=document.getElementById("show");
+		var oPrev=document.getElementById("prev");
+		var oNext=document.getElementById("next");
+		var iLength=oShow.offsetWidth/50;
+		oShow.iNow=0;
+		oShow.aUrl=[];
+		oShow.off=false;
+		for(var i=0;i<iLength;i++){
+			var oDiv=document.createElement("div");
+			oDiv.className="div2";
+			oDiv.style.zIndex=i>iLength/2?iLength-i:i;
+			oDiv.innerHTML="<a href='javascript:;' class='img1' style='background-position:-"+i*50+"px 0px'></a><a href='javascript:;' class='img2' style='background-position:-"+i*50+"px 0px'></a><span class='span1'></span><span class='span2'></span>";
+			oDiv.time=null;
+			oShow.appendChild(oDiv);
+		}
+		for(var i=0;i<aImg.length;i++){
+			oShow.aUrl.push(aImg[i].getAttribute('src'));
+		}
+		oNext.onmousedown=function(){
+			if(oShow.off)return false;
+			oShow.off=true;
+			var iNext=oShow.iNow+1;
+			if(iNext>=oShow.aUrl.length)iNext=0;
+			tab(iNext);
+			setTimeout(function(){
+				oShow.off=false;
+			},iLength*50+50+350)
+		};
+		oPrev.onmousedown=function(){
+			if(oShow.off){
+				return false;
+			}
+			oShow.off=true;
+			var iNext=oShow.iNow-1;
+			if(iNext<0)
+			{
+				iNext=oShow.aUrl.length-1;
+			}
+			tab(iNext);
+			setTimeout(function(){
+				oShow.off=false;
+			},iLength*50+50+350)
+		};
+		function tab(iNext){
+			var oShow=document.getElementById("show");
+			var aImg2=oShow.getElementsByClassName("img2");
+			var aDiv=oShow.getElementsByTagName("div");
+			for(var i=0;i<aImg2.length;i++){
+				aImg2[i].style.backgroundImage="url("+oShow.aUrl[iNext]+")";
+			}
+			for(var i=0;i<aDiv.length;i++){
+				var iTime=i*50;
+				starmove(aDiv[i],iTime);
+			}
+			oShow.iNow=iNext;
+
+			function starmove(obj,iTime){
+				var aImg1=obj.getElementsByClassName("img1")[0];
+				var aImg2=obj.getElementsByClassName("img2")[0];
+				var aSpan1=obj.getElementsByClassName("span1")[0];
+				var aSpan2=obj.getElementsByClassName("span2")[0];
+				obj.style.WebkitTransition="0.3s -webkit-transform ease";
+				aSpan1.style.WebkitTransition=aSpan2.style.WebkitTransition=aImg1.style.WebkitTransition=aImg2.style.WebkitTransition="20ms -webkit-transform ease";
+				setTimeout(function(){
+					aImg1.style.WebkitTransform="translateZ(180px)";
+					aImg2.style.WebkitTransform="translateZ(-180px) rotateX(90deg)";
+					aSpan2.style.WebkitTransform=aSpan1.style.WebkitTransform="translateZ(180px) rotateY(90deg)";
+					setTimeout(function(){
+						obj.style.WebkitTransform="translateZ(-180px) rotateX(-90deg)";
+						setTimeout(function(){
+							aSpan1.style.WebkitTransition=aSpan2.style.WebkitTransition=obj.style.WebkitTransition=aImg1.style.WebkitTransition=aImg2.style.WebkitTransition="none";
+							aImg1.style.backgroundImage=aImg2.style.backgroundImage;
+							obj.style.WebkitTransform="rotateX(0deg)";									
+							aSpan1.style.WebkitTransform="rotateY(90deg)";
+							aSpan2.style.WebkitTransform="rotateY(90deg)";
+							aImg1.style.WebkitTransform="translateZ(0px)";
+							aImg2.style.WebkitTransform="translateZ(0px) rotateX(-90deg)";
+						},350);
+					},50);
+				},iTime);	
+			}
+		}
 	}
 }
-var aSpan = oDemo1.getElementsByTagName('span')
-oBody.onclick=function(){
-	if(!btnReady)return;
-	btnReady = false;
-	now++
-	for(var i=0;i<aSpan.length;i++){
-		var spanX = aSpan[i].offsetWidth/2+aSpan[i].offsetLeft;
-		var spanY = aSpan[i].offsetHeight/2+aSpan[i].offsetTop;
-		var boxX = oDiv1.offsetWidth/2;
-		var boxY = oDiv1.offsetHeight/2;
-		aSpan[i].style.opacity=0
-		aSpan[i].style.webkitTransition='.5s ease-out all'
-		aSpan[i].style.webkitTransform='perspective(800px) translateX('+(spanX-boxX)+'px) translateY('+(spanY-boxY)+'px) translateZ('+rnd()+'px) rotateX('+font()*rnd()+'deg) rotateY('+font()*rnd()+'deg) rotateZ('+font()*rnd()+'deg)';
-
-		(function(oSpan){
-			oSpan.addEventListener('webkitTransitionEnd',function(){
-				oSpan.style.opacity=1
-				oSpan.style.webkitTransition='0s ease-out all'
-				oDiv1.style.backgroundImage='url(res/Boom'+((now+1)%3)+'.jpg)'
-				oSpan.style.backgroundImage='url(res/Boom'+now%3+'.jpg)'
-				oSpan.style.webkitTransform='perspective(800px) translateX(0) translateY(0) translateZ(0) rotateX(0) rotateY(0) rotateZ(0)'
-				btnReady = true;
-			},false)
-		})(aSpan[i])
-	}
-}
-
-function rnd(){
-	return parseInt(Math.random()*100)
-}
-function font(){
-	return Math.random()>0.5?1:-1;
+for(var i in json){
+	json[i]();
 }
 </script>
 </html>
