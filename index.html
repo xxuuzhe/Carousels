@@ -4,8 +4,8 @@
 <title>Demos</title>
 <style type="text/css">
 *{margin: 0;padding: 0;list-type:none;}
-#demo1 .div1{width:700px;height:400px;margin:150px auto;position: relative;background:url(res/1.jpg);transform-style:preserve-3d;}
-#demo1 span{position: absolute;width: 100px;height:100px;background:url(res/0.jpg);transform-style:preserve-3d;}
+#demo1 .div1{width:700px;height:400px;margin:150px auto;position: relative;background:url(res/Boom/1.jpg);transform-style:preserve-3d;}
+#demo1 span{position: absolute;width: 100px;height:100px;background:url(res/Boom/0.jpg);transform-style:preserve-3d;}
 </style>
 
 </head>
@@ -50,8 +50,8 @@ oBody.onclick=function(){
 			oSpan.addEventListener('webkitTransitionEnd',function(){
 				oSpan.style.opacity=1
 				oSpan.style.webkitTransition='0s ease-out all'
-				oDiv1.style.backgroundImage='url(res/'+((now+1)%3)+'.jpg)'
-				oSpan.style.backgroundImage='url(res/'+now%3+'.jpg)'
+				oDiv1.style.backgroundImage='url(res/Boom'+((now+1)%3)+'.jpg)'
+				oSpan.style.backgroundImage='url(res/Boom'+now%3+'.jpg)'
 				oSpan.style.webkitTransform='perspective(800px) translateX(0) translateY(0) translateZ(0) rotateX(0) rotateY(0) rotateZ(0)'
 				btnReady = true;
 			},false)
