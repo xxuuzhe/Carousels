@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Title</title>
+<style>
+*{margin: 0;padding:0;list-style: none}
+#box{width: 800px;height: 360px;position: relative;margin:100px auto;-webkit-perspective:1600px;-webkit-perspective-origin:center;-webkit-transform-style:preserve-3d;}
+#ul{-webkit-transform-style:preserve-3d;}
+#ul1 li{height: 360px;width: 80px;-webkit-transform-style:preserve-3d;-webkit-transform-origin:center center -180px;float: left;position: relative;}
+a{position: absolute;width: 100%;height: 100%;}
+a:nth-child(1){background: url(res/1.jpg) no-repeat;}
+a:nth-child(2){background: url(res/2.jpg) no-repeat;left: 0;top:-360px;-webkit-transform:rotatex(90deg);-webkit-transform-origin:bottom;}
+a:nth-child(3){background: url(res/3.jpg) no-repeat;left: 0;top:0;-webkit-transform:translatez(-360px);-webkit-transform-origin:center;}
+a:nth-child(4){background: url(res/4.jpg) no-repeat;left: 0;top:360px;-webkit-transform:rotatex(-90deg) ;-webkit-transform-origin:top;}
+ol{width: 200px;height: 60px;display: -webkit-box;-webkit-box-pack:center;-webkit-box-align:center;margin:0 auto;}
+ol li{-webkit-box-flex:1;background: pink;text-align: center;margin:4px;height: 60px;line-height: 60px;cursor: pointer }
+li span:nth-of-type(1){position: absolute;width: 360px;height: 360px;background: gray;left: -360px;top:0;-webkit-transform:rotatey(-90deg);-webkit-transform-origin:right;}
+li span:nth-of-type(2){position: absolute;width: 360px;height: 360px;background: gray;left: 80px;top:0;-webkit-transform:rotatey(90deg);-webkit-transform-origin:left;}
+
+</style>
+<script type="text/javascript">
+window.onload=function(){
+	var oUl = document.getElementById('ul');
+	var aLi = oUl.getElementsByTagName('li');
+	var n=0;
+	for(var i=0;i<10;i++){
+		
+		aLi[i].style.zIndex= i<5?5-i:i;
+		for(var j=0;j<4;j++){
+			aLi[i].children[j].style.backgroundPosition=-(i*80)+'px '+'0px';
+		};
+	};
+	var oOl = document.getElementsByTagName('ol')[0];
+	var aLi2 = oOl.getElementsByTagName('li');
+	for(var i=0;i<aLi2.length;i++){
+		aLi2[i].onclick=function(){
+			n++;
+			for(var i=0;i<10;i++){
+				aLi[i].style.WebkitTransform='rotatex('+n*90+'deg)';
+				aLi[i].style.WebkitTransition='.5s '+i*50+'ms';
+			};
+		};
+	};
+};
+</script>
+</head>
+<body>
+
+<div id='box'>
+	<ul id='ul'>
+		<li>
+			<a></a>
+			<a></a>
+			<a></a>
+			<a></a>
+			<span></span>
+			<span></span>
+		</li>
+		<li>
+			<a></a>
+			<a></a>
+			<a></a>
+			<a></a>
+			<span></span>
+			<span></span>
+		</li>
+		<li>
+			<a></a>
+			<a></a>
+			<a></a>
+			<a></a>
+			<span></span>
+			<span></span>
+		</li>
+		<li>
+			<a></a>
+			<a></a>
+			<a></a>
+			<a></a>
+			<span></span>
+			<span></span>
+		</li>
+		<li>
+			<a></a>
+			<a></a>
+			<a></a>
+			<a></a>
+			<span></span>
+			<span></span>
+		</li>
+		<li>
+			<a></a>
+			<a></a>
+			<a></a>
+			<a></a>
+			<span></span>
+			<span></span>
+		</li>
+		<li>
+			<a></a>
+			<a></a>
+			<a></a>
+			<a></a>
+			<span></span>
+			<span></span>
+		</li>
+		<li>
+			<a></a>
+			<a></a>
+			<a></a>
+			<a></a>
+			<span></span>
+			<span></span>
+		</li>
+
+		<li>
+			<a></a>
+			<a></a>
+			<a></a>
+			<a></a>
+			<span></span>
+			<span></span>
+		</li>
+		<li>
+			<a></a>
+			<a></a>
+			<a></a>
+			<a></a>
+			<span></span>
+			<span></span>
+		</li>
+	</ul>
+</div>
+<ol>
+	<li>1</li><li>2</li><li>3</li><li>4</li>
+</ol>
+
+	
+</body>
+</html>
